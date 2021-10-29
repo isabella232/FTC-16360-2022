@@ -1,25 +1,10 @@
 package org.firstinspires.ftc.teamcode.lib;
 
-import android.provider.Settings;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.lib.hardware.Intake;
 import org.firstinspires.ftc.teamcode.lib.hardware.Robot;
-import org.firstinspires.ftc.teamcode.lib.hardware.Shooter;
-import org.firstinspires.ftc.teamcode.lib.hardware.Transfer;
-import org.firstinspires.ftc.teamcode.lib.hardware.Wobble;
-
-import java.util.Arrays;
 
 public class RobotTele extends Robot {
     Controller controller1, controller2;
@@ -28,36 +13,10 @@ public class RobotTele extends Robot {
     public RobotTele(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
         super(hardwareMap);
 
-        // set wobble goal to right state
-        wobblegripperOpen();
-        //wobbleStoringPos();
-
         // initialise controllers
         controller1 = new Controller(gamepad1);
         controller2 = new Controller(gamepad2);
 
-        // set target to high goal
-        Globals.setTarget(Targets.TargetType.HIGHGOAL);
-
-        // get starting pose from auto
-        switch(Globals.rings) {
-            case 0:
-                PoseStorage.currentPose = new Pose2d(10, 38, Math.toRadians(270));
-                break;
-            case 1:
-                PoseStorage.currentPose = new Pose2d(10, 10, Math.toRadians(270));
-                break;
-            case 4:
-                PoseStorage.currentPose = new Pose2d(10, 38, Math.toRadians(270));
-                break;
-            default:
-                PoseStorage.currentPose = new Pose2d(10, 38, Math.toRadians(270));
-                break;
-        }
-
-
-
-        drive.setPoseEstimate(PoseStorage.currentPose);
     }
 
     @Override
@@ -71,39 +30,10 @@ public class RobotTele extends Robot {
 
         // update controls according to button states
         updateControls();
-
-        // update joystick values in autoAim
-        autoAim.updateJoysticks(controller1.getLeftJoystickXValue(), controller1.getLeftJoystickYValue(), controller1.getRightJoystickXValue());
-
-        // update autoAim
-        autoAim.update();
-
-        // update shooter pidf and flap in the background
-        Shooter.setDistance(AutoAim.getDistance());
-        shooter.update();
-
-        // set drive motor power
-        drive.setWeightedDrivePower(autoAim.getDriveDirection());
-
-        // Read pose
-        poseEstimate = drive.getPoseEstimate();
-
-        // Continually write pose to PoseStorage
-        PoseStorage.currentPose = poseEstimate;
     }
 
     private void updateControls() {
-        // controller 1
-
-        // cancel driveToPoint
-        /*
-        if((Math.abs(controller1.getLeftJoystickXValue()) > 0.5 || Math.abs(controller1.getLeftJoystickYValue()) > 0.5 || Math.abs(controller1.getRightJoystickXValue()) > 0.5) && robotState == RobotState.AUTO_POSITION) {
-            drive.cancelFollowing();
-            setRobotState(RobotState.DRIVING);
-        }
-
-         */
-
+/*
         if (controller1.getaButton() == Controller.ButtonState.ON_PRESS) { // set to aiming mode
             setRobotState(RobotState.AIMING);
             Globals.updateTarget();
@@ -293,5 +223,7 @@ public class RobotTele extends Robot {
         if(controller2.getRightJoystickXValue() > 0.5) {
             intake.setRingArmClearingPos();
         }
+
+ */
     }
 }
