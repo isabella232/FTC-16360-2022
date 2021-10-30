@@ -20,7 +20,10 @@ public class Auto_Blue extends LinearOpMode {
     // This is defines the possible steps our program will take
     enum State {
         IDLE,
-        DRIVE_TO_SHUB
+        START_TO_SHUB,
+        DEPOSIT_BLOCK,
+        SHUB_TO_BARRIER,
+        OVER_BARRIER
     }
 
     enum BarcodePos{
@@ -47,6 +50,9 @@ public class Auto_Blue extends LinearOpMode {
     //
     BarcodePos barcodePos;
 
+    //Trajectories
+    Trajectory startToShub,shubToBarrier;
+
     private void initialize(){
         // Initialize the robot class
         robot = new Robot(hardwareMap);
@@ -63,10 +69,20 @@ public class Auto_Blue extends LinearOpMode {
         // a timer for timed actions
         waitTimer = new ElapsedTime();
 
+        //define first state
+        currentState = State.START_TO_SHUB;
+
         /*
          **  Trajectories
          */
 
+        startToShub = robot.drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)))
+                .build();
+
+        shubToBarrier = robot.drive.trajectoryBuilder(startToShub.end())
+                .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)))
+                .build();
         //...
     }
 
@@ -98,8 +114,24 @@ public class Auto_Blue extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
 
             switch (currentState) {
-                case IDLE:
-                    currentState = State.DRIVE_TO_SHUB;
+                case START_TO_SHUB:
+                    currentState = State.DEPOSIT_BLOCK;
+                    robot.drive.followTrajectoryAsync(startToShub);
+                    break;
+                case DEPOSIT_BLOCK:
+                    if(!robot.drive.isBusy()) {
+                        currentState = State.SHUB_TO_BARRIER;
+                    }
+                    break;
+                case SHUB_TO_BARRIER:
+                    currentState = State.OVER_BARRIER;
+                    robot.drive.followTrajectoryAsync(shubToBarrier);
+                    break;
+                case OVER_BARRIER:
+                    if(!robot.drive.isBusy()) {
+                        //drive over barrier manually
+                        currentState = State.IDLE;
+                    }
             }
 
             // We update robot continuously in the background, regardless of state
