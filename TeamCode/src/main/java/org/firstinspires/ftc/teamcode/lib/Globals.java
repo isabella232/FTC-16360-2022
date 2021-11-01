@@ -5,12 +5,11 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 public class Globals {
 
-    public enum Alliance {
-        RED,
-        BLUE
+    public enum BarcodePos{
+        BOTTOM,
+        MIDDLE,
+        TOP
     }
-
-    public static Alliance alliance = Alliance.BLUE;
 
     public static Pose2d currentPose = new Pose2d();
 }

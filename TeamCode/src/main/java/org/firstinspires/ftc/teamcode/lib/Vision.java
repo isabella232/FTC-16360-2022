@@ -41,19 +41,24 @@ public class Vision {
             {
                 phoneCam.startStreaming(320,240, OpenCvCameraRotation.UPSIDE_DOWN);
             }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
         });
     }
 
-    public int getRingAmount() {
+    public Globals.BarcodePos getBarcodePosition() {
         //pipeline.processFrame(M);
         switch(pipeline.position) {
-            case NONE:
-                return 0;
-            case ONE:
-                return 1;
-            case FOUR:
-                return 4;
+            case TOP:
+                return Globals.BarcodePos.TOP;
+            case MIDDLE:
+                return Globals.BarcodePos.MIDDLE;
+            case BOTTOM:
+                return Globals.BarcodePos.BOTTOM;
         }
-        return -1;
+        return Globals.BarcodePos.BOTTOM;
     }
 }

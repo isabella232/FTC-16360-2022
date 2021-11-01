@@ -1,0 +1,6 @@
+fehler fixen
+werte in auto eintragen
+spinner class
+	arm class
+klassen in robot class integrieren
+vision

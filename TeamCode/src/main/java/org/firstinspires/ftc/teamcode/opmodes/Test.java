@@ -22,7 +22,7 @@ public class Test extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+/*
         DcMotor shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
 
         // initialize robot
@@ -54,6 +54,6 @@ public class Test extends LinearOpMode {
             telemetry.addData("state", robot.getRobotState());
             telemetry.addData("shots", Globals.shots);
             telemetry.update();
-        }
+        }*/
     }
 }

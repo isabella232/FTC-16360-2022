@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.lib;
 
 
+import org.firstinspires.ftc.teamcode.drive.opmode.BackAndForth;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -12,16 +13,6 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class VisionPipeline extends OpenCvPipeline
 {
     /*
-     * An enum to define the ring count
-     */
-    public enum RingPosition
-    {
-        FOUR,
-        ONE,
-        NONE
-    }
-
-    /*
      * Some color constants
      */
     static final Scalar BLUE = new Scalar(0, 0, 255);
@@ -30,13 +21,14 @@ public class VisionPipeline extends OpenCvPipeline
     /*
      * The core values which define the location and size of the sample regions
      */
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(45,65);
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(45,65); //Top Barcode Position Anchor
+    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(45,65); //Middle Barcode Position Anchor
+    static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(45,65); //Bottom Barcode Position Anchor
 
     static final int REGION_WIDTH = 25;
     static final int REGION_HEIGHT = 60;
 
-    final int FOUR_RING_THRESHOLD = 143;    //148
-    final int ONE_RING_THRESHOLD = 135;
+    final int PRESENCE_THRSHOLD = 143;    //148
 
     Point region1_pointA = new Point(
             REGION1_TOPLEFT_ANCHOR_POINT.x,
@@ -45,16 +37,33 @@ public class VisionPipeline extends OpenCvPipeline
             REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
             REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
+    Point region2_pointA = new Point(
+            REGION2_TOPLEFT_ANCHOR_POINT.x,
+            REGION2_TOPLEFT_ANCHOR_POINT.y);
+    Point region2_pointB = new Point(
+            REGION2_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+            REGION2_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+
+    Point region3_pointA = new Point(
+            REGION3_TOPLEFT_ANCHOR_POINT.x,
+            REGION3_TOPLEFT_ANCHOR_POINT.y);
+    Point region3_pointB = new Point(
+            REGION3_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+            REGION3_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+
+
     /*
      * Working variables
      */
     Mat region1_Cb;
+    Mat region2_Cb;
+    Mat region3_Cb;
     Mat YCrCb = new Mat();
     Mat Cb = new Mat();
-    public int avg1;
+    public int avg1, avg2, avg3;
 
     // Volatile since accessed by OpMode thread w/o synchronization
-    public volatile RingPosition position = RingPosition.FOUR;
+    public volatile Globals.BarcodePos position = Globals.BarcodePos.BOTTOM;
 
     /*
      * This function takes the RGB frame, converts to YCrCb,
@@ -72,6 +81,8 @@ public class VisionPipeline extends OpenCvPipeline
         inputToCb(firstFrame);
 
         region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
+        region2_Cb = Cb.submat(new Rect(region2_pointA, region2_pointB));
+        region3_Cb = Cb.submat(new Rect(region3_pointA, region3_pointB));
     }
 
     @Override
@@ -80,6 +91,8 @@ public class VisionPipeline extends OpenCvPipeline
         inputToCb(input);
 
         avg1 = (int) Core.mean(region1_Cb).val[0];
+        avg2 = (int) Core.mean(region2_Cb).val[0];
+        avg3 = (int) Core.mean(region3_Cb).val[0];
 
         Imgproc.rectangle(
                 input, // Buffer to draw on
@@ -88,13 +101,13 @@ public class VisionPipeline extends OpenCvPipeline
                 BLUE, // The color the rectangle is drawn in
                 2); // Thickness of the rectangle lines
 
-        position = RingPosition.FOUR; // Record our analysis
-        if(avg1 > FOUR_RING_THRESHOLD){
-            position = RingPosition.FOUR;
-        }else if (avg1 > ONE_RING_THRESHOLD){
-            position = RingPosition.ONE;
-        }else{
-            position = RingPosition.NONE;
+        position = Globals.BarcodePos.BOTTOM; // Record our analysis
+        if(avg1 > avg2 && avg1 > avg3) {
+            position = Globals.BarcodePos.TOP;
+        } else if (avg2 > avg1 && avg2 > avg3) {
+            position = Globals.BarcodePos.MIDDLE;
+        } else if (avg3 > avg1 && avg3 > avg2) {
+            position = Globals.BarcodePos.BOTTOM;
         }
 
         Imgproc.rectangle(
@@ -104,11 +117,25 @@ public class VisionPipeline extends OpenCvPipeline
                 GREEN, // The color the rectangle is drawn in
                 -1); // Negative thickness means solid fill
 
+        Imgproc.rectangle(
+                input, // Buffer to draw on
+                region2_pointA, // First point which defines the rectangle
+                region2_pointB, // Second point which defines the rectangle
+                GREEN, // The color the rectangle is drawn in
+                -1); // Negative thickness means solid fill
+
+        Imgproc.rectangle(
+                input, // Buffer to draw on
+                region3_pointA, // First point which defines the rectangle
+                region3_pointB, // Second point which defines the rectangle
+                GREEN, // The color the rectangle is drawn in
+                -1); // Negative thickness means solid fill
+
         return input;
     }
 
-    public int getAnalysis()
+    public String getAnalysis()
     {
-        return avg1;
+        return avg1 + ", " + avg2 + ", " + avg3;
     }
 }

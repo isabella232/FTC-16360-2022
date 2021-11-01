@@ -19,8 +19,6 @@ import java.util.regex.Pattern
 
 apply plugin: 'com.android.application'
 
-def useProguard = false
-
 android {
 
     compileSdkVersion 29
@@ -56,9 +54,9 @@ android {
     defaultConfig {
         signingConfig signingConfigs.debug
         applicationId 'com.qualcomm.ftcrobotcontroller'
-        minSdkVersion 24
+        minSdkVersion 23
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 28
-        multiDexEnabled true
 
         /**
          * We keep the versionCode and versionName of robot controller applications in sync with
@@ -98,13 +96,6 @@ android {
             ndk {
                 abiFilters "armeabi-v7a"
             }
-
-            if (useProguard) {
-                minifyEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                        'proguard-rules.pro'
-                println(getProguardFiles())
-            }
         }
         debug {
             debuggable true
@@ -112,13 +103,6 @@ android {
             renderscriptDebuggable true
             ndk {
                 abiFilters "armeabi-v7a"
-            }
-
-            if (useProguard) {
-                minifyEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                        'proguard-rules.pro'
-                println(getProguardFiles())
             }
         }
     }
@@ -128,6 +112,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        pickFirst '**/*.so'
+    }
     sourceSets.main {
         jni.srcDirs = []
         jniLibs.srcDir rootProject.file('libs')
@@ -139,5 +126,5 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
-    jcenter()
 }
+

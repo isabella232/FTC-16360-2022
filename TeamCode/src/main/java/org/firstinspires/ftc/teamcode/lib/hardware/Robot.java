@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.lib.Globals;
 
 public class Robot {
     protected HardwareMap hardwareMap;
 
     public SampleMecanumDrive drive;
+    public Spinner spinner;
 
     public enum RobotState {
         DRIVING
@@ -23,11 +25,14 @@ public class Robot {
     public Robot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
 
+        //pass HardwareMap to hardware classes, initialize
+        spinner = new Spinner(hardwareMap);
+
         // set robot state to idle
         robotState = RobotState.DRIVING;
 
         // set robot pose
-        drive.setPoseEstimate(PoseStorage.currentPose);
+        drive.setPoseEstimate(Globals.currentPose);
 
         // Velocity control per wheel is not necessary outside of motion profiled auto
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -50,8 +55,9 @@ public class Robot {
     }
 
     public void update() {
-        // We update drive continuously in the background, regardless of state
+        // We update hardware classes continuously in the background, regardless of state
         drive.update();
+        spinner.update();
 
         //Update all Classes here
         ///...

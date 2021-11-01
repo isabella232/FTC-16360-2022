@@ -45,7 +45,6 @@ public class ServoTest extends LinearOpMode {
                 module.clearBulkCache();
             }
 
-            Globals.autonomous = true;
             controller.update();
             robot.update();
 
@@ -54,9 +53,6 @@ public class ServoTest extends LinearOpMode {
             }
             if(controller.getdPadDown() == Controller.ButtonState.ON_PRESS) {
                 servo.setPosition(servo.getPosition() - 0.02);
-            }
-            if(controller.getaButton() == Controller.ButtonState.ON_PRESS) {
-                robot.shoot();
             }
 
             telemetry.addData("pos", servo.getPosition());
