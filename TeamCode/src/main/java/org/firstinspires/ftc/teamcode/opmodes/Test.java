@@ -13,7 +13,8 @@ import org.firstinspires.ftc.teamcode.lib.RobotTele;
 import org.firstinspires.ftc.teamcode.lib.hardware.Robot;
 
 
-@TeleOp(group = "advanced")
+@TeleOp(group = "advanced", name = "uiuiui")
+
 public class Test extends LinearOpMode {
     private Robot robot;
 

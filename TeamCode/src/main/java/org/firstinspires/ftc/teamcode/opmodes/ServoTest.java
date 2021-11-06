@@ -4,6 +4,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -24,13 +25,16 @@ public class ServoTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
-
         // initialize robot
-        robot = new RobotTele(hardwareMap, gamepad1, gamepad2);
+        //robot = new RobotTele(hardwareMap, gamepad1, gamepad2);
 
-        servo = hardwareMap.get(Servo.class, "feeder");
-        servo.setPosition(0.6);
+        double posL = 0;
+        double posR = 0;
+        DcMotorEx modor;
+        Servo left, right;
+        modor = hardwareMap.get(DcMotorEx.class, "Arm");
+        left = hardwareMap.get(Servo.class, "leftHand");
+        right = hardwareMap.get(Servo.class, "rightHand");
         controller = new Controller(gamepad1);
 
         waitForStart();
@@ -45,17 +49,28 @@ public class ServoTest extends LinearOpMode {
                 module.clearBulkCache();
             }
 
-            controller.update();
-            robot.update();
-
             if(controller.getdPadUp() == Controller.ButtonState.ON_PRESS) {
-                servo.setPosition(servo.getPosition() + 0.02);
+                posR += 0.005;
             }
             if(controller.getdPadDown() == Controller.ButtonState.ON_PRESS) {
-                servo.setPosition(servo.getPosition() - 0.02);
+                posR -= 0.005;
             }
 
-            telemetry.addData("pos", servo.getPosition());
+            if(controller.getdPadRight() == Controller.ButtonState.ON_PRESS) {
+                posL += 0.005;
+            }
+            if(controller.getdPadLeft() == Controller.ButtonState.ON_PRESS) {
+                posL -= 0.005;
+            }
+
+            right.setPosition(posR);
+            left.setPosition(posL);
+
+            controller.update();
+
+            telemetry.addData("Motor", modor.getCurrentPosition());
+            telemetry.addData("posL", posL);
+            telemetry.addData("posR", posR);
             telemetry.update();
         }
     }

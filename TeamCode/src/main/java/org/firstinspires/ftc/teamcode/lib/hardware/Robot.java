@@ -13,6 +13,7 @@ public class Robot {
 
     public SampleMecanumDrive drive;
     public Spinner spinner;
+    public Arm arm;
 
     public enum RobotState {
         DRIVING
@@ -27,6 +28,7 @@ public class Robot {
 
         //pass HardwareMap to hardware classes, initialize
         spinner = new Spinner(hardwareMap);
+        arm = new Arm(hardwareMap);
 
         // set robot state to idle
         robotState = RobotState.DRIVING;

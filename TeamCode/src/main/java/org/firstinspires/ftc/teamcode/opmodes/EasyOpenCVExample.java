@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.lib.Vision;
+
 @TeleOp(name="Camera", group="Iterative Opmode")
 //@Disabled
 public class EasyOpenCVExample extends OpMode {

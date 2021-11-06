@@ -23,6 +23,7 @@ public class Spinner {
 
         //set inital state
         state = State.IDLE;
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void setSpinning() {
@@ -36,7 +37,7 @@ public class Spinner {
     public void update() {
         switch (state) {
             case IDLE:
-                motor.setPower(0);
+                motor.setTargetPosition(motor.getCurrentPosition());
                 break;
             case SPINNING:
                 motor.setPower(0.15);

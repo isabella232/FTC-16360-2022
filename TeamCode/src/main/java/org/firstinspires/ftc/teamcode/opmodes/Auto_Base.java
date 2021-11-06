@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.lib.Vision;
 import org.firstinspires.ftc.teamcode.lib.hardware.Robot;
 
 //@Disabled
-@Autonomous(group = "opmodes")
 public class Auto_Base{
 
     // This enum defines our "state"

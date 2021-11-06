@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.lib.Vision;
+
 
 @TeleOp(group = "advanced")
 public class VisionTuner extends LinearOpMode {
@@ -34,7 +36,6 @@ public class VisionTuner extends LinearOpMode {
             }
 
             telemetry.addData("num", vision.pipeline.avg1);
-            telemetry.addData("estimate", vision.getRingAmount());
             telemetry.update();
 
         }
