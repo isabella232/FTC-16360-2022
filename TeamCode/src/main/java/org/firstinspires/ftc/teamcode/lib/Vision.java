@@ -50,7 +50,6 @@ public class Vision {
     }
 
     public Globals.BarcodePos getBarcodePosition() {
-        //pipeline.processFrame(M);
         switch(pipeline.position) {
             case TOP:
                 return Globals.BarcodePos.TOP;

@@ -20,19 +20,20 @@ public class Auto_Blue_Outer extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // initialize auto
-        base = new Auto_Base(hardwareMap, telemetry);
-        base.startPos = Auto_Base.StartPos.BLUE_OUTER;
+        base = new Auto_Base(hardwareMap, telemetry, Auto_Base.StartPos.BLUE_OUTER);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
-        // clear cache for bulk reading
-        for (LynxModule module : this.hardwareMap.getAll(LynxModule.class)) {
-            module.clearBulkCache();
-        }
+        while(opModeIsActive() && !isStopRequested()) {
+            // clear cache for bulk reading
+            for (LynxModule module : this.hardwareMap.getAll(LynxModule.class)) {
+                module.clearBulkCache();
+            }
 
-        base.update();
+            base.update();
+        }
     }
     //Globals.currentPose = base.robot.drive.getPoseEstimate();
 }

@@ -169,7 +169,6 @@ public class SampleMecanumDrive extends com.acmerobotics.roadrunner.drive.Mecanu
         // reverse motors where needed
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
 
         setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
     }

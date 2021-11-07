@@ -23,14 +23,17 @@ public class Spinner {
 
         //set inital state
         state = State.IDLE;
+        motor.setTargetPosition(motor.getCurrentPosition());
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void setSpinning() {
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         state = State.SPINNING;
     }
 
     public void setIdle() {
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         state = State.IDLE;
     }
 
@@ -40,7 +43,7 @@ public class Spinner {
                 motor.setTargetPosition(motor.getCurrentPosition());
                 break;
             case SPINNING:
-                motor.setPower(0.15);
+                motor.setPower(0.3);
                 break;
         }
     }

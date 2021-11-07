@@ -24,10 +24,10 @@ public class Arm {
     }
 
     public StateArm armState;
-    private StateArm lastArmState;
+    private StateArm lastArmState, previousArmState;
     private ElapsedTime timer;
     public StateHand handState;
-    private DcMotorEx motor;
+    public DcMotorEx motor;
     private Servo left;
     private Servo right;
     public int motorOffset, zeroOffset;
@@ -38,10 +38,13 @@ public class Arm {
         left = hardwareMap.get(Servo.class, "leftHand");
         right = hardwareMap.get(Servo.class, "rightHand");
         motorOffset = 0;
-        zeroOffset = 0;
+        zeroOffset = -920;
         armState = StateArm.FRONT;
         handState = StateHand.OPEN;
         timer = new ElapsedTime();
+        previousArmState = StateArm.FRONT;
+        motor.setTargetPosition(motor.getCurrentPosition());
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void nextPos() {
@@ -81,37 +84,49 @@ public class Arm {
                 handState = StateHand.OPEN;
         }
     }
+    public void forceReset() {
+        motorOffset = motor.getCurrentPosition() + zeroOffset;
+    }
 
     public void update() {
         if(armState != lastArmState) {
+            previousArmState = lastArmState;
             lastArmState = armState;
             timer.reset();
         }
-        if (timer.milliseconds() > 750 && armState == StateArm.IDLE && lastArmState == StateArm.FRONT) {
-            motorOffset = motor.getCurrentPosition() + zeroOffset;
+        if (timer.milliseconds() > 750 && armState == StateArm.IDLE && previousArmState == StateArm.FRONT) { //TODO: only armState Front
+            forceReset();
         }
 
         switch (armState) {
             case FRONT:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motor.setTargetPosition(motorOffset + 957);
+                motor.setTargetPosition(motorOffset + 917);
+                motor.setPower(0.45);
                 break;
             case TOP:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motor.setTargetPosition(motorOffset + 214);
+                motor.setTargetPosition(motorOffset + 294);
+                motor.setPower(0.45);
                 break;
             case MIDDLE:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motor.setTargetPosition(motorOffset + 107);
+                motor.setTargetPosition(motorOffset + 167);
+                motor.setPower(0.45);
                 break;
             case BOTTOM:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motor.setTargetPosition(motorOffset + 40);
+                motor.setTargetPosition(motorOffset + 43);
+                motor.setPower(0.45);
                 break;
             case IDLE:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 motor.setPower(0);
         }
+        if(motor.getCurrentPosition() > 700 && armState == StateArm.FRONT) {
+            motor.setPower(0);
+        }
+
         switch (handState) {
             case OPEN:
                 left.setPosition(0.5);

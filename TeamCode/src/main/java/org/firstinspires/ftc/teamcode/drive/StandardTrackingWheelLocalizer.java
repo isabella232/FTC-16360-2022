@@ -15,7 +15,7 @@ import java.util.List;
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:
  *
- *    /--------------\
+ *    /--------------\  43cm x 30.4 - 16.93 x 11.97
  *    |     ____     |
  *    |     ----     |
  *    | ||        || |
@@ -31,8 +31,8 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double WHEEL_RADIUS = 1; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 14.68; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = -6.84; // in; offset of the lateral wheel
+    public static double LATERAL_DISTANCE = 9; // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = -4.53; // in; offset of the lateral wheel
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
@@ -52,6 +52,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
         //reverse encoders if needed
         leftEncoder.setDirection(Encoder.Direction.REVERSE);
+        rightEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {

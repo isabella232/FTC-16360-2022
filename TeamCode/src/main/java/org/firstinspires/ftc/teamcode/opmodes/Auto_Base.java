@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.lib.Globals;
 import org.firstinspires.ftc.teamcode.lib.Vision;
+import org.firstinspires.ftc.teamcode.lib.hardware.Arm;
 import org.firstinspires.ftc.teamcode.lib.hardware.Robot;
 
 //@Disabled
@@ -23,6 +24,7 @@ public class Auto_Base{
         START_TO_SHUB,
         DEPOSIT_BLOCK,
         SHUB_TO_BARRIER,
+        SHUB_TO_D0,
         SHUB_TO_DUCK,
         SPIN_DUCK,
         SPINNING,
@@ -43,14 +45,14 @@ public class Auto_Base{
     // Our current State
     State currentState;
 
-    // Define our start pose
-    Pose2d startPose = new Pose2d(-62, 23, Math.toRadians(0));
+    // Declare our start pose
+    Pose2d startPose;
 
     // robot class
     Robot robot;
 
-    // Vision Class Variable
-    Vision vision;
+    // Vision Class Variable ToDo
+    //Vision vision;
 
     // Timer for timed actions
     ElapsedTime waitTimer;
@@ -64,21 +66,22 @@ public class Auto_Base{
     //Trajectories
     Trajectory startToShub,shubToBarrier, barrierToWarehouse, shubToDuck, duckToHome;
 
-    public Auto_Base(HardwareMap hardwareMap, Telemetry telemetry){
-        //copy telemetry
+    public Auto_Base(HardwareMap hardwareMap, Telemetry telemetry, StartPos startPos){
+        //copy telemetry, startPos
         this.telemetry = telemetry;
+        this.startPos = startPos;
 
         // Initialize the robot class
         robot = new Robot(hardwareMap);
 
-        // Initialize the vision Class
-        vision = new Vision(hardwareMap);
+        //set arm to idle and close hand
+        robot.arm.armState = Arm.StateArm.IDLE;
+        robot.arm.handState = Arm.StateHand.CLOSED;
+        robot.update();
+        robot.arm.forceReset();
 
-        // Set initial pose
-        robot.drive.setPoseEstimate(startPose);
-
-        // Save initial pose to PoseStorage
-        Globals.currentPose = startPose;
+        // Initialize the vision Class ToDo
+        //vision = new Vision(hardwareMap);
 
         // a timer for timed actions
         waitTimer = new ElapsedTime();
@@ -86,58 +89,68 @@ public class Auto_Base{
         // define first state
         currentState = State.START_TO_SHUB;
 
-        // get Barcode Position
-        barcodePos = vision.getBarcodePosition();
+        // get Barcode Position ToDO
+        //barcodePos = vision.getBarcodePosition();
+        barcodePos = Globals.BarcodePos.MIDDLE;
 
         /*
          **  Trajectories
          */
         switch (startPos) {
             case RED_INNER:
+                startPose = new Pose2d(62.4, 76.85, Math.toRadians(180));
                 startToShub = robot.drive.trajectoryBuilder(startPose)
-                        .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(37.35, 59, Math.toRadians(0)))
                         .build();
                 shubToBarrier = robot.drive.trajectoryBuilder(startToShub.end())
-                        .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(65, 75, Math.toRadians(90)))
                         .build();
                 barrierToWarehouse = robot.drive.trajectoryBuilder(shubToBarrier.end())
-                        .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(65, 118, Math.toRadians(90)))
                         .build();
                 break;
             case RED_OUTER:
+                startPose = new Pose2d(62.4, 29.6, Math.toRadians(180));
                 startToShub = robot.drive.trajectoryBuilder(startPose)
-                        .lineToLinearHeading(new Pose2d(0, 1, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(37.35, 59, Math.toRadians(0)))//
                         .build();
                 shubToDuck = robot.drive.trajectoryBuilder(startToShub.end())
-                        .lineToLinearHeading(new Pose2d(0, 3, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(57.3, 8.39, Math.toRadians(90)))
                         .build();
                 duckToHome = robot.drive.trajectoryBuilder(shubToDuck.end())
-                        .lineToLinearHeading(new Pose2d(0, 3, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(35.4, 8.39, Math.toRadians(90)))
                         .build();
                 break;
             case BLUE_INNER:
+                startPose = new Pose2d(-62.4, 76.85, Math.toRadians(0));
                 startToShub = robot.drive.trajectoryBuilder(startPose)
-                        .lineToLinearHeading(new Pose2d(0, 2, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-37.35, 59, Math.toRadians(180)))
                         .build();
                 shubToBarrier = robot.drive.trajectoryBuilder(startToShub.end())
-                        .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-65, 75, Math.toRadians(90)))
                         .build();
                 barrierToWarehouse = robot.drive.trajectoryBuilder(shubToBarrier.end())
-                        .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-65, 118, Math.toRadians(90)))
                         .build();
                 break;
             case BLUE_OUTER:
+                startPose = new Pose2d(-62.4, 29.6, Math.toRadians(0));
                 startToShub = robot.drive.trajectoryBuilder(startPose)
-                        .lineToLinearHeading(new Pose2d(0, 3, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-37.35, 59, Math.toRadians(180)))
                         .build();
                 shubToDuck = robot.drive.trajectoryBuilder(startToShub.end())
-                        .lineToLinearHeading(new Pose2d(0, 3, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-57.3, 8.39, Math.toRadians(90)))
                         .build();
                 duckToHome = robot.drive.trajectoryBuilder(shubToDuck.end())
-                        .lineToLinearHeading(new Pose2d(0, 3, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-35.4, 8.39, Math.toRadians(90)))
                         .build();
                 break;
         }
+        // Save initial pose to PoseStorage
+        Globals.currentPose = startPose;
+
+        // Set initial pose
+        robot.drive.setPoseEstimate(startPose);
     }
 
     public void update() {
@@ -146,35 +159,60 @@ public class Auto_Base{
             case START_TO_SHUB:
                 currentState = State.DEPOSIT_BLOCK;
                 robot.drive.followTrajectoryAsync(startToShub);
+                    //quality code right here
+                switch (barcodePos) {
+                    case TOP:
+                        robot.arm.armState = Arm.StateArm.TOP;
+                        break;
+                    case MIDDLE:
+                        robot.arm.armState = Arm.StateArm.MIDDLE;
+                        break;
+                    case BOTTOM:
+                        robot.arm.armState = Arm.StateArm.BOTTOM;
+                }
                 break;
 
             case DEPOSIT_BLOCK:
                 if(!robot.drive.isBusy()) {
-                    //deposit block
+                    robot.arm.handState = Arm.StateHand.OPEN;
                     if (startPos == StartPos.BLUE_INNER || startPos == StartPos.RED_INNER) {// if we started inner
                         currentState = State.SHUB_TO_BARRIER;
                     } else {
-                        currentState = State.SHUB_TO_DUCK;
+                        currentState = State.SHUB_TO_D0;
                     }
+                    waitTimer.reset();
                 }
                 break;
 
             case SHUB_TO_BARRIER:
-                currentState = State.BARRIER_TO_WAREHOUSE;
-                robot.drive.followTrajectoryAsync(shubToBarrier);
+                if(waitTimer.seconds() > 1) {
+                    currentState = State.BARRIER_TO_WAREHOUSE;
+                    robot.drive.followTrajectoryAsync(shubToBarrier);
+                }
                 break;
 
             case BARRIER_TO_WAREHOUSE:
                 if(!robot.drive.isBusy()) {
+                    robot.arm.armState = Arm.StateArm.FRONT;
                     robot.drive.followTrajectoryAsync(barrierToWarehouse);
                     currentState = State.IDLE;
                 }
                 break;
 
-            case SHUB_TO_DUCK:
-                currentState = Auto_Base.State.SPIN_DUCK;
-                robot.drive.followTrajectoryAsync(shubToDuck);
+            case SHUB_TO_D0:
+                if(waitTimer.seconds() > 1) {
+                    currentState = State.SHUB_TO_DUCK;
+                    robot.drive.followTrajectoryAsync(shubToDuck);
+                    waitTimer.reset();
+                }
                 break;
+
+            case SHUB_TO_DUCK:
+                if(waitTimer.milliseconds() > 750) {
+                    currentState = State.SPIN_DUCK;
+                    robot.arm.armState = Arm.StateArm.FRONT;
+                }
+
             case SPIN_DUCK:
                 if(!robot.drive.isBusy()) {
                     robot.spinner.setSpinning();
@@ -183,7 +221,7 @@ public class Auto_Base{
                 }
                 break;
             case SPINNING:
-                if(waitTimer.seconds() > 1) {
+                if(waitTimer.seconds() > 2) {
                     robot.spinner.setIdle();
                     currentState = Auto_Base.State.DUCK_TO_HOME;
                 }

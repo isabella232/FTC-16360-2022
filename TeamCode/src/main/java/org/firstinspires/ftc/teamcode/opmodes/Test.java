@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,33 +11,30 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.lib.Controller;
 import org.firstinspires.ftc.teamcode.lib.Globals;
 import org.firstinspires.ftc.teamcode.lib.RobotTele;
+import org.firstinspires.ftc.teamcode.lib.Vision;
+import org.firstinspires.ftc.teamcode.lib.hardware.Arm;
 import org.firstinspires.ftc.teamcode.lib.hardware.Robot;
 
 
-@TeleOp(group = "advanced", name = "uiuiui")
+@TeleOp(group = "advanced", name = "test")
 
 public class Test extends LinearOpMode {
     private Robot robot;
+    private Vision vision;
 
     private ElapsedTime runtime = new ElapsedTime();
 
-
     @Override
     public void runOpMode() throws InterruptedException {
-/*
-        DcMotor shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
 
         // initialize robot
-        robot = new Robot(hardwareMap);
+        //robot = new Robot(hardwareMap);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
-        waitForStart();
-
-        robot.setRobotState(Robot.RobotState.SHOOTING);
-        robot.update();
+        robot.drive.setPoseEstimate(new Pose2d(-62.4, 29.6, Math.toRadians(0)));
 
         while (opModeIsActive() && !isStopRequested()) {
             // clear cache for bulk reading
@@ -44,17 +42,10 @@ public class Test extends LinearOpMode {
                 module.clearBulkCache();
             }
 
-            robot.shoot();
-            if(Globals.shots > 3) {
-                robot.setRobotState(Robot.RobotState.DRIVING);
-            }
-            robot.update();
+            telemetry.addLine(vision.pipeline.getAnalysis());
 
-            Globals.autonomous = true;
-
-            telemetry.addData("state", robot.getRobotState());
-            telemetry.addData("shots", Globals.shots);
+            telemetry.addData("position", robot.drive.getPoseEstimate());
             telemetry.update();
-        }*/
+        }
     }
 }

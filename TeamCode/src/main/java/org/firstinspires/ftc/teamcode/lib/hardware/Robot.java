@@ -27,6 +27,7 @@ public class Robot {
         this.hardwareMap = hardwareMap;
 
         //pass HardwareMap to hardware classes, initialize
+        drive = new SampleMecanumDrive(hardwareMap);
         spinner = new Spinner(hardwareMap);
         arm = new Arm(hardwareMap);
 
@@ -34,7 +35,7 @@ public class Robot {
         robotState = RobotState.DRIVING;
 
         // set robot pose
-        drive.setPoseEstimate(Globals.currentPose);
+        //drive.setPoseEstimate(Globals.currentPose);
 
         // Velocity control per wheel is not necessary outside of motion profiled auto
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -60,6 +61,7 @@ public class Robot {
         // We update hardware classes continuously in the background, regardless of state
         drive.update();
         spinner.update();
+        arm.update();
 
         //Update all Classes here
         ///...
