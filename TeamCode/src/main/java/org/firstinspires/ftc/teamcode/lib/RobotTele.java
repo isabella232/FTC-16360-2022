@@ -71,8 +71,11 @@ public class RobotTele extends Robot {
         if (controller2.getRightBumper() == Controller.ButtonState.ON_PRESS) {
             arm.armState = Arm.StateArm.IDLE;
         }
-        if (controller2.getLeftBumper() == Controller.ButtonState.ON_PRESS) {
+        if (controller2.getRightTrigger() == Controller.ButtonState.ON_PRESS) {
             arm.toggleHand();
+        }
+        if (controller2.getLeftBumper() == Controller.ButtonState.ON_PRESS) {
+            intake.toggle();
         }
     }
 }

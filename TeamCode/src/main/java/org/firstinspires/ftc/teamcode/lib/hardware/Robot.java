@@ -14,6 +14,7 @@ public class Robot {
     public SampleMecanumDrive drive;
     public Spinner spinner;
     public Arm arm;
+    public Intake intake;
 
     public enum RobotState {
         DRIVING
@@ -30,6 +31,7 @@ public class Robot {
         drive = new SampleMecanumDrive(hardwareMap);
         spinner = new Spinner(hardwareMap);
         arm = new Arm(hardwareMap);
+        intake = new Intake(hardwareMap);
 
         // set robot state to idle
         robotState = RobotState.DRIVING;
@@ -62,6 +64,7 @@ public class Robot {
         drive.update();
         spinner.update();
         arm.update();
+        intake.update();
 
         //Update all Classes here
         ///...

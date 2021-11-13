@@ -52,7 +52,7 @@ public class Auto_Base{
     Robot robot;
 
     // Vision Class Variable ToDo
-    //Vision vision;
+    Vision vision;
 
     // Timer for timed actions
     ElapsedTime waitTimer;
@@ -81,7 +81,7 @@ public class Auto_Base{
         robot.arm.forceReset();
 
         // Initialize the vision Class ToDo
-        //vision = new Vision(hardwareMap);
+        vision = new Vision(hardwareMap);
 
         // a timer for timed actions
         waitTimer = new ElapsedTime();
@@ -90,7 +90,7 @@ public class Auto_Base{
         currentState = State.START_TO_SHUB;
 
         // get Barcode Position ToDO
-        //barcodePos = vision.getBarcodePosition();
+        barcodePos = vision.getBarcodePosition();
         barcodePos = Globals.BarcodePos.MIDDLE;
 
         /*

@@ -28,8 +28,6 @@ public class VisionPipeline extends OpenCvPipeline
     static final int REGION_WIDTH = 25;
     static final int REGION_HEIGHT = 60;
 
-    final int PRESENCE_THRSHOLD = 143;    //148
-
     Point region1_pointA = new Point(
             REGION1_TOPLEFT_ANCHOR_POINT.x,
             REGION1_TOPLEFT_ANCHOR_POINT.y);
