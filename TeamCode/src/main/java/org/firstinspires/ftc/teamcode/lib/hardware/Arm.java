@@ -117,7 +117,7 @@ public class Arm {
                 break;
             case MIDDLE:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motor.setTargetPosition(motorOffset - 790);//167
+                motor.setTargetPosition(motorOffset - 800);//167
                 motor.setPower(0.45);
                 break;
             case BOTTOM:
