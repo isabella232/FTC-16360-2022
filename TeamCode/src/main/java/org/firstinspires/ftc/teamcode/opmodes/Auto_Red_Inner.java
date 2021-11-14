@@ -22,6 +22,11 @@ public class Auto_Red_Inner extends LinearOpMode {
         // initialize auto
         base = new Auto_Base(hardwareMap, telemetry, Auto_Base.StartPos.RED_INNER);
 
+        while(!isStarted() && !isStopRequested()) {
+            telemetry.addData("pp", base.vision.getBarcodePosition());
+            telemetry.update();
+        }
+
         waitForStart();
 
         if (isStopRequested()) return;

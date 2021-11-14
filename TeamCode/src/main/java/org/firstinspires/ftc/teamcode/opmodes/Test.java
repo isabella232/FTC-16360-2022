@@ -28,13 +28,11 @@ public class Test extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // initialize robot
-        //robot = new Robot(hardwareMap);
+        robot = new Robot(hardwareMap);
 
         waitForStart();
 
         if (isStopRequested()) return;
-
-        robot.drive.setPoseEstimate(new Pose2d(-62.4, 29.6, Math.toRadians(0)));
 
         while (opModeIsActive() && !isStopRequested()) {
             // clear cache for bulk reading
@@ -42,7 +40,8 @@ public class Test extends LinearOpMode {
                 module.clearBulkCache();
             }
 
-            telemetry.addLine(vision.pipeline.getAnalysis());
+            //telemetry.addLine(vision.getBarcodePosition().name());
+            telemetry.addData("motorPos", robot.arm.motor.getCurrentPosition());
 
             telemetry.addData("position", robot.drive.getPoseEstimate());
             telemetry.update();

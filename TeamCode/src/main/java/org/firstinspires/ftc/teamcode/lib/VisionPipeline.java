@@ -21,12 +21,12 @@ public class VisionPipeline extends OpenCvPipeline
     /*
      * The core values which define the location and size of the sample regions
      */
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(45,65); //Top Barcode Position Anchor
-    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(45,65); //Middle Barcode Position Anchor
-    static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(45,65); //Bottom Barcode Position Anchor
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(0,150); //Top Barcode Position Anchor
+    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(180,150); //Middle Barcode Position Anchor
+    static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(402,150); //Bottom Barcode Position Anchor
 
-    static final int REGION_WIDTH = 25;
-    static final int REGION_HEIGHT = 60;
+    static final int REGION_WIDTH = 30;
+    static final int REGION_HEIGHT = 55;
 
     Point region1_pointA = new Point(
             REGION1_TOPLEFT_ANCHOR_POINT.x,
@@ -101,11 +101,11 @@ public class VisionPipeline extends OpenCvPipeline
 
         position = Globals.BarcodePos.BOTTOM; // Record our analysis
         if(avg1 > avg2 && avg1 > avg3) {
-            position = Globals.BarcodePos.TOP;
+            position = Globals.BarcodePos.BOTTOM;
         } else if (avg2 > avg1 && avg2 > avg3) {
             position = Globals.BarcodePos.MIDDLE;
         } else if (avg3 > avg1 && avg3 > avg2) {
-            position = Globals.BarcodePos.BOTTOM;
+            position = Globals.BarcodePos.TOP;
         }
 
         Imgproc.rectangle(

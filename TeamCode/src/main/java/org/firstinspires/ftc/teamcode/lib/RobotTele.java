@@ -47,8 +47,8 @@ public class RobotTele extends Robot {
 
         //get controller input to drive
         drive.setWeightedDrivePower(new Pose2d(
-                -gamepad1.left_stick_y,
-                -gamepad1.left_stick_x, -gamepad1.right_stick_x));
+                -gamepad1.left_stick_y * 0.4,
+                -gamepad1.left_stick_x * 0.4, -gamepad1.right_stick_x * 0.4));
     }
 
     private void updateControls() {
@@ -56,6 +56,13 @@ public class RobotTele extends Robot {
             spinner.setSpinning();
         }
         if (controller1.getaButton() == Controller.ButtonState.ON_RELEASE) {
+            spinner.setIdle();
+        }
+
+        if (gamepad1.b) {//controller1.getaButton() == Controller.ButtonState.ON_PRESS) {
+            spinner.setReversed();
+        }
+        if (controller1.getbButton() == Controller.ButtonState.ON_RELEASE) {
             spinner.setIdle();
         }
 

@@ -75,7 +75,7 @@ public class Auto_Base{
         robot = new Robot(hardwareMap);
 
         //set arm to idle and close hand
-        robot.arm.armState = Arm.StateArm.IDLE;
+        robot.arm.armState = Arm.StateArm.FRONT;
         robot.arm.handState = Arm.StateHand.CLOSED;
         robot.update();
         robot.arm.forceReset();
@@ -89,18 +89,14 @@ public class Auto_Base{
         // define first state
         currentState = State.START_TO_SHUB;
 
-        // get Barcode Position ToDO
-        barcodePos = vision.getBarcodePosition();
-        barcodePos = Globals.BarcodePos.MIDDLE;
-
         /*
          **  Trajectories
          */
         switch (startPos) {
             case RED_INNER:
-                startPose = new Pose2d(62.4, 76.85, Math.toRadians(180));
+                startPose = new Pose2d(62.4, 78.5, Math.toRadians(180));
                 startToShub = robot.drive.trajectoryBuilder(startPose)
-                        .lineToLinearHeading(new Pose2d(37.35, 59, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(23, 80.5, Math.toRadians(90)))
                         .build();
                 shubToBarrier = robot.drive.trajectoryBuilder(startToShub.end())
                         .lineToLinearHeading(new Pose2d(65, 75, Math.toRadians(90)))
@@ -110,21 +106,21 @@ public class Auto_Base{
                         .build();
                 break;
             case RED_OUTER:
-                startPose = new Pose2d(62.4, 29.6, Math.toRadians(180));
+                startPose = new Pose2d(62.4, 31.5, Math.toRadians(180));
                 startToShub = robot.drive.trajectoryBuilder(startPose)
-                        .lineToLinearHeading(new Pose2d(37.35, 59, Math.toRadians(0)))//
+                        .lineToLinearHeading(new Pose2d(23, 40, Math.toRadians(270)))//
                         .build();
                 shubToDuck = robot.drive.trajectoryBuilder(startToShub.end())
-                        .lineToLinearHeading(new Pose2d(57.3, 8.39, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(51.5, 6.5, Math.toRadians(180)))
                         .build();
                 duckToHome = robot.drive.trajectoryBuilder(shubToDuck.end())
-                        .lineToLinearHeading(new Pose2d(35.4, 8.39, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(35.4, 6.5, Math.toRadians(180)))
                         .build();
                 break;
             case BLUE_INNER:
-                startPose = new Pose2d(-62.4, 76.85, Math.toRadians(0));
+                startPose = new Pose2d(-62.4, 88.5, Math.toRadians(0));
                 startToShub = robot.drive.trajectoryBuilder(startPose)
-                        .lineToLinearHeading(new Pose2d(-37.35, 59, Math.toRadians(180)))
+                        .lineToLinearHeading(new Pose2d(-23, 80.5, Math.toRadians(90)))
                         .build();
                 shubToBarrier = robot.drive.trajectoryBuilder(startToShub.end())
                         .lineToLinearHeading(new Pose2d(-65, 75, Math.toRadians(90)))
@@ -134,9 +130,9 @@ public class Auto_Base{
                         .build();
                 break;
             case BLUE_OUTER:
-                startPose = new Pose2d(-62.4, 29.6, Math.toRadians(0));
+                startPose = new Pose2d(-62.4, 40.5, Math.toRadians(0));
                 startToShub = robot.drive.trajectoryBuilder(startPose)
-                        .lineToLinearHeading(new Pose2d(-37.35, 59, Math.toRadians(180)))
+                        .lineToLinearHeading(new Pose2d(-23, 40, Math.toRadians(270)))
                         .build();
                 shubToDuck = robot.drive.trajectoryBuilder(startToShub.end())
                         .lineToLinearHeading(new Pose2d(-57.3, 8.39, Math.toRadians(90)))
@@ -157,6 +153,8 @@ public class Auto_Base{
 
         switch (currentState) {
             case START_TO_SHUB:
+                // get Barcode Position ToDO
+                barcodePos = vision.getBarcodePosition();
                 currentState = State.DEPOSIT_BLOCK;
                 robot.drive.followTrajectoryAsync(startToShub);
                     //quality code right here
@@ -210,6 +208,7 @@ public class Auto_Base{
             case SHUB_TO_DUCK:
                 if(waitTimer.milliseconds() > 750) {
                     currentState = State.SPIN_DUCK;
+                    robot.arm.motor.setPower(1);
                     robot.arm.armState = Arm.StateArm.FRONT;
                 }
 
@@ -222,7 +221,11 @@ public class Auto_Base{
                 break;
             case SPINNING:
                 if(waitTimer.seconds() > 2) {
-                    robot.spinner.setIdle();
+                    if (startPos == StartPos.RED_OUTER) {
+                        robot.spinner.setReversed();
+                    } else {
+                        robot.spinner.setIdle();
+                    }
                     currentState = Auto_Base.State.DUCK_TO_HOME;
                 }
                 break;
@@ -246,6 +249,7 @@ public class Auto_Base{
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.addData("position", barcodePos);
+        telemetry.addData("armPos", robot.arm.armState);
         telemetry.addData("state", currentState);
         telemetry.update();
     }

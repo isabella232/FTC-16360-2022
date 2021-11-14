@@ -8,6 +8,7 @@ public class Spinner {
     HardwareMap hardwareMap;
     enum State {
         SPINNING,
+        REVERSED,
         IDLE
     }
     public State state;
@@ -37,6 +38,11 @@ public class Spinner {
         state = State.IDLE;
     }
 
+    public void setReversed() {
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        state = State.REVERSED;
+    }
+
     public void update() {
         switch (state) {
             case IDLE:
@@ -44,6 +50,9 @@ public class Spinner {
                 break;
             case SPINNING:
                 motor.setPower(0.3);
+                break;
+            case REVERSED:
+                motor.setPower(-0.3);
                 break;
         }
     }

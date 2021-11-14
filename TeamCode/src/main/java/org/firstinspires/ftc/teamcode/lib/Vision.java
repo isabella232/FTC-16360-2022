@@ -39,7 +39,7 @@ public class Vision {
             @Override
             public void onOpened()
             {
-                phoneCam.startStreaming(320,240, OpenCvCameraRotation.UPSIDE_DOWN);
+                phoneCam.startStreaming(432,240, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override

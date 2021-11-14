@@ -40,7 +40,7 @@ public class Arm {
         left = hardwareMap.get(Servo.class, "leftHand");
         right = hardwareMap.get(Servo.class, "rightHand");
         motorOffset = 0;
-        zeroOffset = -920;
+        zeroOffset = 0;
         armState = StateArm.RESET;
         handState = StateHand.OPEN;
         timer = new ElapsedTime();
@@ -100,7 +100,7 @@ public class Arm {
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
         }
-        if (timer.milliseconds() > 750 && armState == StateArm.IDLE && previousArmState == StateArm.FRONT) { //TODO: only armState Front
+        if (timer.milliseconds() > 750 && armState == StateArm.IDLE && previousArmState == StateArm.FRONT) {
             forceReset();
         }
 
@@ -112,17 +112,17 @@ public class Arm {
                 break;
             case TOP:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motor.setTargetPosition(motorOffset - 680); //294
+                motor.setTargetPosition(motorOffset - 675); //294
                 motor.setPower(0.45);
                 break;
             case MIDDLE:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motor.setTargetPosition(motorOffset - 800);//167
+                motor.setTargetPosition(motorOffset - 790);//167
                 motor.setPower(0.45);
                 break;
             case BOTTOM:
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                motor.setTargetPosition(motorOffset - 900); //43
+                motor.setTargetPosition(motorOffset - 1000); //43
                 motor.setPower(0.45);
                 break;
             case IDLE:

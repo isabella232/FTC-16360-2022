@@ -22,6 +22,11 @@ public class Auto_Blue_Outer extends LinearOpMode {
         // initialize auto
         base = new Auto_Base(hardwareMap, telemetry, Auto_Base.StartPos.BLUE_OUTER);
 
+        while(!isStarted() && !isStopRequested()) {
+            telemetry.addData("pp", base.vision.getBarcodePosition());
+            telemetry.update();
+        }
+
         waitForStart();
 
         if (isStopRequested()) return;
