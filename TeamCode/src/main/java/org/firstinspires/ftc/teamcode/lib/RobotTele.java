@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.lib.hardware.Arm;
+import org.firstinspires.ftc.teamcode.lib.hardware.Intake;
 import org.firstinspires.ftc.teamcode.lib.hardware.Robot;
 
 public class RobotTele extends Robot {
@@ -41,6 +42,8 @@ public class RobotTele extends Robot {
         // update controls according to button states
         updateControls();
 
+        // set motor arm offset
+        arm.motorOffset = (int) -controller2.getLeftJoystickYValue()*60;
 
         //get controller input to drive
         drive.setWeightedDrivePower(new Pose2d(
@@ -58,24 +61,45 @@ public class RobotTele extends Robot {
 
         if (controller2.getaButton() == Controller.ButtonState.ON_PRESS) {
             arm.armState = Arm.StateArm.BOTTOM;
+            arm.handState = Arm.StateHand.CLOSED;
         }
         if (controller2.getbButton() == Controller.ButtonState.ON_PRESS) {
             arm.armState = Arm.StateArm.MIDDLE;
+            arm.handState = Arm.StateHand.CLOSED;
         }
         if (controller2.getyButton() == Controller.ButtonState.ON_PRESS) {
             arm.armState = Arm.StateArm.TOP;
+            arm.handState = Arm.StateHand.CLOSED;
         }
         if (controller2.getxButton() == Controller.ButtonState.ON_PRESS) {
             arm.armState = Arm.StateArm.FRONT;
+            arm.handState = Arm.StateHand.OPEN;
         }
-        if (controller2.getRightBumper() == Controller.ButtonState.ON_PRESS) {
+        if (controller2.getdPadDown() == Controller.ButtonState.ON_PRESS) {
             arm.armState = Arm.StateArm.IDLE;
+            arm.handState = Arm.StateHand.OPEN;
         }
-        if (controller2.getRightTrigger() == Controller.ButtonState.ON_PRESS) {
-            arm.toggleHand();
+        if (controller2.getdPadUp() == Controller.ButtonState.ON_PRESS) {
+            arm.armState = Arm.StateArm.RESETING;
+            arm.handState = Arm.StateHand.OPEN;
+        }
+        if (controller2.getdPadUp() == Controller.ButtonState.ON_RELEASE){
+            arm.armState = Arm.StateArm.RESET;
         }
         if (controller2.getLeftBumper() == Controller.ButtonState.ON_PRESS) {
-            intake.toggle();
+            arm.handState = Arm.StateHand.CLOSED;
+        }
+        if (controller2.getRightBumper() == Controller.ButtonState.ON_PRESS){
+            arm.handState = Arm.StateHand.OPEN;
+        }
+        if (controller2.getLeftTrigger() == Controller.ButtonState.ON_PRESS) {
+            intake.intakeState = Intake.StateIntake.REVERSE;
+        }
+        if (controller2.getLeftTrigger() == Controller.ButtonState.ON_RELEASE){
+            intake.intakeState = Intake.StateIntake.IDLE;
+        }
+        if (controller2.getRightTrigger() == Controller.ButtonState.ON_PRESS){
+            intake.intakeState = Intake.StateIntake.ON;
         }
     }
 }

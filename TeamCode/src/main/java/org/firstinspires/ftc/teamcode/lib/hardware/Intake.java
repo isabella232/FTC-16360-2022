@@ -8,9 +8,17 @@ public class Intake {
     private boolean enabled;
     private DcMotorEx motor;
 
+    public enum StateIntake{
+        ON,
+        IDLE,
+        REVERSE
+    }
+
+    public StateIntake intakeState;
     public Intake(HardwareMap hardwareMap) {
         enabled = false;
         motor = hardwareMap.get(DcMotorEx.class, "Intake");
+        intakeState = StateIntake.IDLE;
     }
 
     public void toggle() {
@@ -18,10 +26,25 @@ public class Intake {
     }
 
     public void update() {
+        /*
         if(enabled) {
-            motor.setPower(0.6);
+            motor.setPower(0.5);
         } else {
             motor.setPower(0);
         }
+         */
+        switch (intakeState){
+            case ON:
+                motor.setPower(0.45);
+                break;
+            case IDLE:
+                motor.setPower(0);
+                break;
+            case REVERSE:
+                motor.setPower((-0.45));
+                break;
+        }
+
     }
+
 }

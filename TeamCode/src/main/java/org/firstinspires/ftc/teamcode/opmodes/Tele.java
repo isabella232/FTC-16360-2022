@@ -41,9 +41,10 @@ public class Tele extends LinearOpMode {
             }
 
             //Telemetry
-            telemetry.addData("spinner motor", robot.arm.motor.getCurrentPosition());
+            telemetry.addData("arm motor", robot.arm.motor.getCurrentPosition());
             telemetry.addData("motorOffset", robot.arm.motorOffset);
             telemetry.addData("PIDF", robot.arm.motor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+            telemetry.addData("armState", robot.arm.armState);
 
             telemetry.addData("robot state", robot.getRobotState());
             telemetry.update();
